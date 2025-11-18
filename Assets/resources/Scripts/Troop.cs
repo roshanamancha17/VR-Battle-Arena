@@ -3,28 +3,49 @@ using UnityEngine.AI;
 
 public class Troop : MonoBehaviour
 {
-    public float damage = 10f;
+    public float attackRange = 8f;
+    public float shootCooldown = 1f;
+    public GameObject projectilePrefab;
+
+    private float cooldownTimer = 0f;
     private NavMeshAgent agent;
     private BaseHealth targetBase;
 
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        
-        // Find enemy base
         targetBase = GameObject.FindWithTag("EnemyBase").GetComponent<BaseHealth>();
-
-        // Set destination
         agent.SetDestination(targetBase.transform.position);
     }
 
     private void Update()
     {
-        // When close enough, do damage
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        cooldownTimer -= Time.deltaTime;
+
+        float distance = Vector3.Distance(transform.position, targetBase.transform.position);
+
+        // If within range, shoot
+        if (distance <= attackRange)
         {
-            targetBase.TakeDamage(damage);
-            Destroy(gameObject); // Kill troop after attack
+            agent.isStopped = true;
+            ShootAtTarget();
         }
+        else
+        {
+            agent.isStopped = false;
+            agent.SetDestination(targetBase.transform.position);
+        }
+    }
+
+    void ShootAtTarget()
+    {
+        if (cooldownTimer > 0f)
+            return;
+
+        cooldownTimer = shootCooldown;
+
+        // Spawn projectile
+        GameObject proj = Instantiate(projectilePrefab, transform.position + transform.forward * 0.5f, Quaternion.identity);
+        proj.GetComponent<  Projectile>().SetTarget(targetBase.transform);
     }
 }
