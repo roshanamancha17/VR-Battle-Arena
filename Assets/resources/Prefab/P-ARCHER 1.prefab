@@ -124,7 +124,8 @@ GameObject:
   - component: {fileID: 5371553355204111387}
   - component: {fileID: 3012497357211764426}
   - component: {fileID: 4165334230180614463}
-  - component: {fileID: 428068265928475891}
+  - component: {fileID: 8006996832442906264}
+  - component: {fileID: 6049331076267657190}
   m_Layer: 0
   m_Name: P-ARCHER 1
   m_TagString: Untagged
@@ -249,7 +250,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &428068265928475891
+--- !u!114 &8006996832442906264
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,12 +259,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 7748953884079669176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6ee37df3ad05934e8502417b4d6950f, type: 3}
+  m_Script: {fileID: 11500000, guid: 52f28247bb4d07b4587fa4772c0db980, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TroopBase
-  maxHealth: 100
-  currentHealth: 0
+  m_EditorClassIdentifier: Assembly-CSharp::TeamComponent
+  team: 0
+--- !u!114 &6049331076267657190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7748953884079669176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d4ad571e687a62429c2a1200b4d733a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Troop
+  troopType: 1
+  maxHealth: 50
   attackDamage: 20
-  attackRate: 1
-  attackRange: 5
-  attackCooldown: 0
+  attackRange: 3
+  attackCooldown: 1
+  projectilePrefab: {fileID: 686957380034035915, guid: 99e502b7652819449a43c02f46218645,
+    type: 3}
+  projectileSpawnPoint: {fileID: 0}
+  projectileSpeed: 15
+  scanInterval: 0.3
+  baseAttackRange: 2.5

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -59,11 +60,15 @@ public class GameManager : MonoBehaviour
         if (currentState != MatchState.Playing) return;
 
         if (isPlayer)
+        {
             SetState(MatchState.Defeat);
+            SceneManager.LoadScene("Defeat");   // Change to your scene name
+        }
         else
+        {
             SetState(MatchState.Victory);
-
-        // Go to results screen
-        SetState(MatchState.Results);
+            SceneManager.LoadScene("Victory");  // Change to your scene name
+        }
     }
+
 }

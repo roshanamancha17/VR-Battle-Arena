@@ -2,37 +2,62 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 15f;
+    public float speed = 20f;
     public float damage = 10f;
-    private Transform target;
+    public float lifetime = 5f;
 
-    public void SetTarget(Transform newTarget)
+    private Transform target;
+    private Troop shooter;
+    private bool hasHit = false;
+
+    public void Initialize(Transform enemy, Troop shooterTroop)
     {
-        target = newTarget;
+        target = enemy;
+        shooter = shooterTroop;
+
+        if (target != null)
+            transform.LookAt(target.position);
+
+        Destroy(gameObject, lifetime); // auto clean
     }
 
     private void Update()
     {
-        if (target == null)
+        if (hasHit) return;
+
+        // If target disappeared while flying → destroy arrow
+        if (target == null || shooter == null)
         {
             Destroy(gameObject);
             return;
         }
 
-        // Move arrow toward target
-        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-        transform.LookAt(target);
+        // Move toward target
+        Vector3 direction = (target.position - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(direction);
 
-        // If very close, apply damage
-        if (Vector3.Distance(transform.position, target.position) < 0.2f)
+        // If reached near target → hit
+        if (Vector3.Distance(transform.position, target.position) < 0.3f)
         {
-            BaseHealth baseHealth = target.GetComponent<BaseHealth>();
-            if (baseHealth != null)
-            {
-                baseHealth.TakeDamage(damage);
-            }
-
-            Destroy(gameObject);
+            HitTarget();
         }
+    }
+
+    private void HitTarget()
+    {
+        hasHit = true;
+
+        // Damage troop
+        Troop troop = target.GetComponent<Troop>();
+        if (troop != null && troop != shooter)
+            troop.TakeDamage(damage);
+
+        // Damage base
+        BaseHealth baseHealth = target.GetComponent<BaseHealth>();
+        if (baseHealth != null)
+            baseHealth.TakeDamage(damage);
+
+        Destroy(gameObject); // remove arrow immediately
     }
 }

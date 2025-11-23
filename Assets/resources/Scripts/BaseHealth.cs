@@ -29,7 +29,8 @@ public class BaseHealth : MonoBehaviour
     {
         Debug.Log(name + " base destroyed!");
 
-        bool isPlayer = (team == Team.Player);
-        GameManager.Instance.OnBaseDestroyed(isPlayer);
+        bool isPlayerBase = (team == Team.Player);
+        GameManager.Instance.OnBaseDestroyed(isPlayerBase);
     }
+
 }
