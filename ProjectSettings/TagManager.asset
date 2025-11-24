@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerBase
   - EnemyBase
+  - WorldCanvas
   layers:
   - Default
   - TransparentFX

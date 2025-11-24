@@ -5,19 +5,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Match References")]
-    public BaseHealth playerBase;
-    public BaseHealth enemyBase;
-
-    [Header("State")]
     public MatchState currentState = MatchState.None;
+    public bool playerWon = false;     // Result shared with Results scene
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else Destroy(gameObject);
-
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -25,50 +23,51 @@ public class GameManager : MonoBehaviour
         SetState(MatchState.Title);
     }
 
+    public void StartMatch()
+    {
+        playerWon = false;
+        SetState(MatchState.Playing);
+        SceneManager.LoadScene("Main");  // your battle scene name
+    }
+
+    public void OnBaseDestroyed(bool isPlayerBase)
+    {
+        if (currentState != MatchState.Playing) return;
+
+        playerWon = !isPlayerBase;
+
+        if (playerWon)
+            SetState(MatchState.Victory);
+        else
+            SetState(MatchState.Defeat);
+
+        SceneManager.LoadScene("Results");   // Single results screen
+    }
+
+    public void RestartMatch()
+    {
+        StartMatch();
+    }
+
+    public void GoToTitle()
+    {
+        SetState(MatchState.Title);
+        SceneManager.LoadScene("Title");
+    }
+
     public void SetState(MatchState newState)
     {
         currentState = newState;
         Debug.Log("Match State changed to: " + newState);
 
-        switch (newState)
-        {
-            case MatchState.Title:
-                // TODO: Show Title UI
-                break;
-
-            case MatchState.Playing:
-                // Start gameplay timer later
-                break;
-
-            case MatchState.Victory:
-                // TODO: Show win UI
-                break;
-
-            case MatchState.Defeat:
-                // TODO: Show lose UI
-                break;
-
-            case MatchState.Results:
-                // TODO: Results screen
-                break;
-        }
     }
 
-    // Called by BaseHealth when a base reaches 0 HP
-    public void OnBaseDestroyed(bool isPlayer)
+    public void QuitGame()
     {
-        if (currentState != MatchState.Playing) return;
+        Application.Quit();
 
-        if (isPlayer)
-        {
-            SetState(MatchState.Defeat);
-            SceneManager.LoadScene("Defeat");   // Change to your scene name
-        }
-        else
-        {
-            SetState(MatchState.Victory);
-            SceneManager.LoadScene("Victory");  // Change to your scene name
-        }
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #endif
     }
-
 }

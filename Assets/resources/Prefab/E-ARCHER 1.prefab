@@ -173,6 +173,8 @@ MonoBehaviour:
     type: 3}
   projectileSpawnPoint: {fileID: 0}
   projectileSpeed: 15
+  healthBarPrefab: {fileID: 7715827663196454835, guid: a304f062f66a7f649a4c368b4516e8e7,
+    type: 3}
   scanInterval: 0.3
   baseAttackRange: 2.5
 --- !u!1 &5404170394512969911
